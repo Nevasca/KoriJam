@@ -8,7 +8,8 @@ public class PlayerController : MonoBehaviour
     private PlayerMovement playerMovement;
 
     private bool init;
-    private Vector3 movement;
+    private Vector2 movement;
+    private Vector2 look;
     private bool holdingJump;
 
     private void Awake()
@@ -23,13 +24,20 @@ public class PlayerController : MonoBehaviour
             return;
 
         playerMovement.Move(movement);
+        playerMovement.Look(look);
         playerMovement.Fly(holdingJump);
     }
 
     public void OnMove(InputAction.CallbackContext value)
     {
-        Vector2 input = value.ReadValue<Vector2>();
-        movement = new Vector3(input.x, 0f, input.y);
+        //Vector2 input = value.ReadValue<Vector2>();
+        //movement = new Vector3(input.x, 0f, input.y);
+        movement = value.ReadValue<Vector2>();
+    }
+
+    public void OnLook(InputAction.CallbackContext value)
+    {
+        look = value.ReadValue<Vector2>();
     }
 
     public void OnJump(InputAction.CallbackContext value)
