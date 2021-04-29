@@ -9,20 +9,21 @@ public class PlayerController : MonoBehaviour
 
     private bool init;
     private Vector3 movement;
+    private bool holdingJump;
 
     private void Awake()
     {
-        
+        playerMovement = GetComponent<PlayerMovement>();
+        init = true;
     }
 
-    private void SetReferences()
+    private void Update()
     {
+        if (!CanReceiveInput())
+            return;
 
-    }
-
-    private void FixedUpdate()
-    {
         playerMovement.Move(movement);
+        playerMovement.Fly(holdingJump);
     }
 
     public void OnMove(InputAction.CallbackContext value)
@@ -31,8 +32,19 @@ public class PlayerController : MonoBehaviour
         movement = new Vector3(input.x, 0f, input.y);
     }
 
+    public void OnJump(InputAction.CallbackContext value)
+    {
+        if (!CanReceiveInput())
+            return;
+
+        if (value.started)
+            playerMovement.Jump();
+
+        holdingJump = value.performed;
+    }
+
     private bool CanReceiveInput()
     {
-        return playerMovement != null;
+        return init;
     }
 }
