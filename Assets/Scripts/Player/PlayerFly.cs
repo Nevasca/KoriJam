@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerFly : MonoBehaviour, IWindInteractable
 {
+    [SerializeField] private float airResistance = 0.2f;
+
     private CharacterController characterController;
     private PlayerMovement playerMovement;
 
@@ -20,6 +22,8 @@ public class PlayerFly : MonoBehaviour, IWindInteractable
     {
         if (isFlying && characterController.isGrounded)
             StopFlying();
+        else if (isFlying)
+            Fly();
     }
 
     public void SetFlying(bool flying)
@@ -34,11 +38,18 @@ public class PlayerFly : MonoBehaviour, IWindInteractable
             return;
 
         isFlying = true;
-        Vector3 velocity = playerMovement.Velocity;        
+        Vector3 velocity = playerMovement.Velocity;
         velocity.y = insideWind ? velocity.y * 0.1f : 0f;
 
         playerMovement.Velocity = velocity;
         playerMovement.Gravity = PlayerMovement.BASE_GRAVITY / 10f;        
+    }
+
+    private void Fly()
+    {
+        //Aplies air resistence
+        if(!insideWind && playerMovement.Velocity.sqrMagnitude > 0.1f)
+            playerMovement.Velocity -= playerMovement.Velocity * airResistance * Time.deltaTime;
     }
 
     private void StopFlying()

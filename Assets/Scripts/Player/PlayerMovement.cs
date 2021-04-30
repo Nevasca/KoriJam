@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public const float BASE_GRAVITY = -30f;
+    public const float BASE_GRAVITY = -40f;
 
     [Header("Movement")]
     [SerializeField] private float movementSpeed = 5f;
@@ -44,6 +44,7 @@ public class PlayerMovement : MonoBehaviour
         characterController.stepOffset = characterController.isGrounded ? defaultStepOffset : 0.01f;
 
         desiredMovement = transform.forward * movement.y + transform.right * movement.x;
+
         characterController.Move(desiredMovement * movementSpeed * Time.deltaTime);
 
         velocity.y += Gravity * Time.deltaTime;
