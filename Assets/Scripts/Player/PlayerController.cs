@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     private PlayerMovement playerMovement;
+    private PlayerFly playerFly;
 
     private bool init;
     private Vector2 movement;
@@ -15,6 +16,7 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         playerMovement = GetComponent<PlayerMovement>();
+        playerFly = GetComponent<PlayerFly>();
         init = true;
     }
 
@@ -25,13 +27,11 @@ public class PlayerController : MonoBehaviour
 
         playerMovement.Move(movement);
         playerMovement.Look(look);
-        playerMovement.Fly(holdingJump);
+        playerFly.SetFlying(holdingJump);
     }
 
     public void OnMove(InputAction.CallbackContext value)
     {
-        //Vector2 input = value.ReadValue<Vector2>();
-        //movement = new Vector3(input.x, 0f, input.y);
         movement = value.ReadValue<Vector2>();
     }
 

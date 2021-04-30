@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public const float BASE_GRAVITY = -30f;
+
     [Header("Movement")]
     [SerializeField] private float movementSpeed = 5f;
-    [SerializeField] private float baseGravity = -9.81f;
+    //[SerializeField] private Vector3 maxVelocity;
 
     [Header("Look")]
     [SerializeField] private Transform followTransform;
@@ -21,15 +23,17 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 desiredMovement;
     private Quaternion nextRotation;
 
-    private Vector3 velocity = Vector3.zero;
     private float defaultStepOffset;
-    private float gravity;
+    private Vector3 velocity = Vector3.zero;
+
+    public float Gravity { get; set; }
+    public Vector3 Velocity { get { return velocity; } set { velocity = value; } }
 
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
         defaultStepOffset = characterController.stepOffset;
-        gravity = baseGravity;
+        Gravity = BASE_GRAVITY;
     }
 
     public void Move(Vector2 movement)
@@ -42,7 +46,7 @@ public class PlayerMovement : MonoBehaviour
         desiredMovement = transform.forward * movement.y + transform.right * movement.x;
         characterController.Move(desiredMovement * movementSpeed * Time.deltaTime);
 
-        velocity.y += gravity * Time.deltaTime;
+        velocity.y += Gravity * Time.deltaTime;
         characterController.Move(velocity * Time.deltaTime);
     }
 
@@ -81,11 +85,8 @@ public class PlayerMovement : MonoBehaviour
         characterController.Move(velocity * Time.deltaTime);
     }
 
-    public void Fly(bool fly)
+    public void ResetGravity()
     {
-        if (velocity.y >= 0f)
-            return;
-
-        gravity = fly ? baseGravity / 10f : baseGravity;
+        Gravity = BASE_GRAVITY;
     }
 }
