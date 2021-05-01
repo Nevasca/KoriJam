@@ -11,8 +11,15 @@ public class MovingPlataform : MonoBehaviour
     [SerializeField] private float waitTime = 2f;
     [SerializeField] private PlataformState currentState;
 
+    private Rigidbody rb;
     private int indexPoint = 0;
     private float timerWait = 0f;
+    private Vector3 distanceToDestination;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
 
     private void FixedUpdate()
     {
@@ -30,10 +37,10 @@ public class MovingPlataform : MonoBehaviour
     private void Move()
     {
         float step = speed * Time.deltaTime;
-        //transform.position = Vector3.MoveTowards(transform.position, points[indexPoint].position, step);
-        GetComponent<Rigidbody>().MovePosition(Vector3.MoveTowards(transform.position, points[indexPoint].position, step));
+        rb.MovePosition(Vector3.MoveTowards(transform.position, points[indexPoint].position, step));
 
-        if(Vector3.Distance(transform.position, points[indexPoint].position) < 0.001f)
+        distanceToDestination = points[indexPoint].position - transform.position;
+        if(distanceToDestination.sqrMagnitude < 0.001f)
         {
             currentState = PlataformState.Waiting;
             indexPoint = (indexPoint + 1) % points.Length;

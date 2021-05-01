@@ -8,12 +8,9 @@ public class Teleport : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        CharacterController controller = other.GetComponent<CharacterController>();
-        if (controller != null) 
+        if (other.CompareTag("Player")) 
         {
-            controller.enabled = false;
-            controller.transform.position = destination.position;
-            controller.enabled = true;
+            other.transform.position = destination.position;
         }
     }
 }

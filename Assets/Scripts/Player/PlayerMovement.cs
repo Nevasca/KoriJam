@@ -11,8 +11,6 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Look")]
     [SerializeField] private Transform followTransform;
-    [SerializeField] private float rotationPower = 3f;
-    [SerializeField] private float rotationLerp = 0.5f;
 
     [Header("Jump")]
     [SerializeField] private float jumpHeight = 5f;

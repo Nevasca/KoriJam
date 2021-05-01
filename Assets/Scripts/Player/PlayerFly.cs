@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerFly : MonoBehaviour, IWindInteractable
 {
-    [SerializeField] private float airResistance = 0.2f;
+    //[SerializeField] private float airResistance = 0.2f;
 
     private PlayerMovement playerMovement;
 
