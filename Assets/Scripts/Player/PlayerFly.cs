@@ -36,9 +36,9 @@ public class PlayerFly : MonoBehaviour, IWindInteractable
             return;
 
         isFlying = true;
-        //Vector3 velocity = playerMovement.Velocity;
-        //velocity.y = insideWind ? velocity.y * 0.1f : velocity.y;
-        //playerMovement.Velocity = velocity;
+        Vector3 velocity = playerMovement.Velocity;
+        velocity.y = insideWind ? velocity.y * 0.1f : 0f;
+        playerMovement.Velocity = velocity;
 
         playerMovement.Gravity = PlayerMovement.BASE_GRAVITY / 10f;
     }

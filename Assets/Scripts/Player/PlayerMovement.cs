@@ -51,6 +51,11 @@ public class PlayerMovement : MonoBehaviour
         desiredMovement *= movementSpeed * Time.deltaTime;
         rb.MovePosition(transform.position + desiredMovement);
 
+        // float step = movementSpeed * Time.deltaTime;
+        // desiredMovement = cameraTransform.forward * movement.y + cameraTransform.right * movement.x;
+        // rb.MovePosition(Vector3.MoveTowards(transform.position, transform.position + desiredMovement, step));
+
+
         followTransform.localEulerAngles = new Vector3(followTransform.localEulerAngles.x, 0f, 0f);
     }
 
