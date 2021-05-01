@@ -20,13 +20,13 @@ public class PlayerController : MonoBehaviour
         init = true;
     }
 
+    //private void Update()
     private void Update()
     {
         if (!CanReceiveInput())
             return;
 
-        playerMovement.Move(movement);
-        playerMovement.Look(look);
+        playerMovement.SetMovement(movement);
         playerFly.SetFlying(holdingJump);
     }
 

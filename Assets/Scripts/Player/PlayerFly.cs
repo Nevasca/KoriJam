@@ -6,7 +6,6 @@ public class PlayerFly : MonoBehaviour, IWindInteractable
 {
     [SerializeField] private float airResistance = 0.2f;
 
-    private CharacterController characterController;
     private PlayerMovement playerMovement;
 
     private bool isFlying;
@@ -15,12 +14,11 @@ public class PlayerFly : MonoBehaviour, IWindInteractable
     private void Awake()
     {
         playerMovement = GetComponent<PlayerMovement>();
-        characterController = GetComponent<CharacterController>();
     }
 
     private void Update()
     {
-        if (isFlying && characterController.isGrounded)
+        if (isFlying && playerMovement.IsGrounded)
             StopFlying();
         else if (isFlying)
             Fly();
@@ -38,18 +36,18 @@ public class PlayerFly : MonoBehaviour, IWindInteractable
             return;
 
         isFlying = true;
-        Vector3 velocity = playerMovement.Velocity;
-        velocity.y = insideWind ? velocity.y * 0.1f : 0f;
+        //Vector3 velocity = playerMovement.Velocity;
+        //velocity.y = insideWind ? velocity.y * 0.1f : velocity.y;
+        //playerMovement.Velocity = velocity;
 
-        playerMovement.Velocity = velocity;
-        playerMovement.Gravity = PlayerMovement.BASE_GRAVITY / 10f;        
+        playerMovement.Gravity = PlayerMovement.BASE_GRAVITY / 10f;
     }
 
     private void Fly()
     {
         //Aplies air resistence
-        if(!insideWind && playerMovement.Velocity.sqrMagnitude > 0.1f)
-            playerMovement.Velocity -= playerMovement.Velocity * airResistance * Time.deltaTime;
+        //if(!insideWind && playerMovement.Velocity.sqrMagnitude > 0.1f)
+        //    playerMovement.Velocity -= playerMovement.Velocity * airResistance * Time.deltaTime;
     }
 
     private void StopFlying()
@@ -61,7 +59,8 @@ public class PlayerFly : MonoBehaviour, IWindInteractable
 
     private bool CanFly()
     {
-        return playerMovement.Velocity.y < 0f || insideWind;
+        //return playerMovement.Velocity.y < 0f || insideWind;
+        return playerMovement.Velocity.y < 0f;
     }
 
     #region Wind

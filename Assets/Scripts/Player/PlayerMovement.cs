@@ -8,7 +8,6 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Movement")]
     [SerializeField] private float movementSpeed = 5f;
-    //[SerializeField] private Vector3 maxVelocity;
 
     [Header("Look")]
     [SerializeField] private Transform followTransform;
@@ -17,73 +16,59 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Jump")]
     [SerializeField] private float jumpHeight = 5f;
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private LayerMask groundMask;
 
-    private CharacterController characterController;
-
+    private Rigidbody rb;
+    private Transform cameraTransform;
+    private Vector2 movement;
     private Vector3 desiredMovement;
-    private Quaternion nextRotation;
-
-    private float defaultStepOffset;
     private Vector3 velocity = Vector3.zero;
 
-    public float Gravity { get; set; }
-    public Vector3 Velocity { get { return velocity; } set { velocity = value; } }
+    public float Gravity { get { return Physics.gravity.y; } set { Physics.gravity = new Vector3(0f, value, 0f); } }
+    public Vector3 Velocity { get { return rb.velocity; } set { rb.velocity = value; } }
+    public bool IsGrounded { get; private set; }
 
     private void Awake()
     {
-        characterController = GetComponent<CharacterController>();
-        defaultStepOffset = characterController.stepOffset;
+        rb = GetComponent<Rigidbody>();
         Gravity = BASE_GRAVITY;
+        cameraTransform = Camera.main.transform;
     }
 
-    public void Move(Vector2 movement)
+    private void FixedUpdate()
     {
-        if (characterController.isGrounded && velocity.y < 0f)
-            velocity.y = -2f;
-
-        characterController.stepOffset = characterController.isGrounded ? defaultStepOffset : 0.01f;
-
-        desiredMovement = transform.forward * movement.y + transform.right * movement.x;
-
-        characterController.Move(desiredMovement * movementSpeed * Time.deltaTime);
-
-        velocity.y += Gravity * Time.deltaTime;
-        characterController.Move(velocity * Time.deltaTime);
+        CheckGround();
+        Move();
     }
 
-    public void Look(Vector2 look)
+    public void SetMovement(Vector2 movement)
     {
-        //Horizontal follow rotation
-        followTransform.rotation *= Quaternion.AngleAxis(look.x * rotationPower, Vector3.up);
+        this.movement = movement;
+    }
 
-        //Vertical follow rotation
-        followTransform.rotation *= Quaternion.AngleAxis(-look.y * rotationPower, Vector3.right);
+    public void Move()
+    {
+        desiredMovement = cameraTransform.forward * movement.y + cameraTransform.right * movement.x;
+        desiredMovement *= movementSpeed * Time.deltaTime;
+        rb.MovePosition(transform.position + desiredMovement);
 
-        Vector3 angles = followTransform.localEulerAngles;
-        angles.z = 0f;
+        followTransform.localEulerAngles = new Vector3(followTransform.localEulerAngles.x, 0f, 0f);
+    }
 
-        float angle = followTransform.localEulerAngles.x;
-        if (angle > 180f && angle < 350f)
-            angles.x = 350f;
-        else if (angle < 180 && angle > 40f)
-            angles.x = 40f;
-
-        followTransform.localEulerAngles = angles;
-        nextRotation = Quaternion.Lerp(followTransform.rotation, nextRotation, Time.deltaTime * rotationLerp);
-
-        //Character rotation
-        transform.rotation = Quaternion.Euler(0f, followTransform.rotation.eulerAngles.y, 0f);
-
-        followTransform.transform.localEulerAngles = new Vector3(angles.x, 0f, 0f);
+    private void CheckGround()
+    {
+        IsGrounded = Physics.CheckSphere(groundCheck.position, 0.2f, groundMask);
     }
 
     public void Jump()
     {
-        if(!characterController.isGrounded)
+        if (!IsGrounded)
             return;
 
-        velocity.y = Mathf.Sqrt(jumpHeight * -2f * Physics.gravity.y);
-        characterController.Move(velocity * Time.deltaTime);
+        velocity = rb.velocity;
+        velocity.y = Mathf.Sqrt(jumpHeight * -2f * BASE_GRAVITY);
+        rb.velocity = velocity;
     }
 
     public void ResetGravity()
