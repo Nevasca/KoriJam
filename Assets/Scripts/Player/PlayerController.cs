@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
 {
     private PlayerMovement playerMovement;
     private PlayerFly playerFly;
+    private PlayerInteraction playerInteraction;
 
     private bool init;
     private Vector2 movement;
@@ -17,10 +18,10 @@ public class PlayerController : MonoBehaviour
     {
         playerMovement = GetComponent<PlayerMovement>();
         playerFly = GetComponent<PlayerFly>();
+        playerInteraction = GetComponentInChildren<PlayerInteraction>();
         init = true;
     }
 
-    //private void Update()
     private void Update()
     {
         if (!CanReceiveInput())
@@ -33,7 +34,6 @@ public class PlayerController : MonoBehaviour
     public void OnMove(InputAction.CallbackContext value)
     {
         movement = value.ReadValue<Vector2>();
-        Debug.Log(movement);
     }
 
     public void OnLook(InputAction.CallbackContext value)
@@ -50,6 +50,15 @@ public class PlayerController : MonoBehaviour
             playerMovement.Jump();
 
         holdingJump = value.performed;
+    }
+
+    public void OnInteract(InputAction.CallbackContext value)
+    {
+        if(!CanReceiveInput())
+            return;
+        
+        if(value.started)
+            playerInteraction.Interact();
     }
 
     private bool CanReceiveInput()

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MovingPlataform : MonoBehaviour
+public class MovingPlataform : MonoBehaviour, IActivable
 {
     public enum PlataformState { Moving, Waiting, Disabled}
 
@@ -56,5 +56,15 @@ public class MovingPlataform : MonoBehaviour
             currentState = PlataformState.Moving;
             timerWait = 0f;
         }
+    }
+
+    public void ToggleActive()
+    {
+        currentState = currentState == PlataformState.Disabled ? PlataformState.Moving : PlataformState.Disabled;
+    }
+
+    public bool IsActive()
+    {
+        return currentState != PlataformState.Disabled;
     }
 }
