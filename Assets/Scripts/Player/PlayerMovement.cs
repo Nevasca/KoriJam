@@ -6,6 +6,9 @@ public class PlayerMovement : MonoBehaviour
 {
     public const float BASE_GRAVITY = -40f;
 
+    [SerializeField] private Transform characterMesh;
+    [SerializeField] private Animator characterAnimator;
+
     [Header("Movement")]
     [SerializeField] private float movementSpeed = 5f;
 
@@ -22,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 movement;
     private Vector3 desiredMovement;
     private Vector3 velocity = Vector3.zero;
+    private Vector3 characterOffsetRotation;
 
     public float Gravity { get { return Physics.gravity.y; } set { Physics.gravity = new Vector3(0f, value, 0f); } }
     public Vector3 Velocity { get { return rb.velocity; } set { rb.velocity = value; } }
@@ -32,6 +36,8 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         Gravity = BASE_GRAVITY;
         cameraTransform = Camera.main.transform;
+        characterOffsetRotation = characterMesh.rotation.eulerAngles;
+        characterAnimator = GetComponent<Animator>();
     }
 
     private void FixedUpdate()
@@ -45,16 +51,23 @@ public class PlayerMovement : MonoBehaviour
         this.movement = movement;
     }
 
+    public void SetLook(Vector2 look)
+    {
+
+    }
+
     public void Move()
     {
         desiredMovement = cameraTransform.forward * movement.y + cameraTransform.right * movement.x;
         desiredMovement *= movementSpeed * Time.deltaTime;
         rb.MovePosition(transform.position + desiredMovement);
 
+        characterMesh.transform.eulerAngles = Quaternion.LookRotation(cameraTransform.forward).eulerAngles + characterOffsetRotation;
+        characterAnimator.SetBool("isRunning", movement.sqrMagnitude > 0f);
+
         // float step = movementSpeed * Time.deltaTime;
         // desiredMovement = cameraTransform.forward * movement.y + cameraTransform.right * movement.x;
         // rb.MovePosition(Vector3.MoveTowards(transform.position, transform.position + desiredMovement, step));
-
 
         followTransform.localEulerAngles = new Vector3(followTransform.localEulerAngles.x, 0f, 0f);
     }

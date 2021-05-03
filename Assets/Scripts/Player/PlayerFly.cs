@@ -7,6 +7,7 @@ public class PlayerFly : MonoBehaviour, IWindInteractable
     //[SerializeField] private float airResistance = 0.2f;
 
     private PlayerMovement playerMovement;
+    private Animator playerAnimator;
 
     private bool isFlying;
     private bool insideWind;
@@ -14,6 +15,7 @@ public class PlayerFly : MonoBehaviour, IWindInteractable
     private void Awake()
     {
         playerMovement = GetComponent<PlayerMovement>();
+        playerAnimator = GetComponent<Animator>();
     }
 
     private void Update()
@@ -41,6 +43,7 @@ public class PlayerFly : MonoBehaviour, IWindInteractable
         playerMovement.Velocity = velocity;
 
         playerMovement.Gravity = PlayerMovement.BASE_GRAVITY / 10f;
+        playerAnimator.speed = 0.3f;
     }
 
     private void Fly()
@@ -55,6 +58,7 @@ public class PlayerFly : MonoBehaviour, IWindInteractable
         playerMovement.ResetGravity();
         playerMovement.Velocity = Vector3.zero;
         isFlying = false;
+        playerAnimator.speed = 1f;
     }
 
     private bool CanFly()
