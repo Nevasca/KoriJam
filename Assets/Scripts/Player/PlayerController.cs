@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 movement;
     private Vector2 look;
     private bool holdingJump;
+    private bool inputEnable = true;
 
     private void Awake()
     {
@@ -63,6 +64,11 @@ public class PlayerController : MonoBehaviour
 
     private bool CanReceiveInput()
     {
-        return init;
+        return init && inputEnable;
+    }
+
+    public void EnableInputs(bool value)
+    {
+        inputEnable = value;
     }
 }

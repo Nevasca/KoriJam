@@ -8,6 +8,7 @@ public class ButtonDevice : MonoBehaviour, IInteractable
     [SerializeField] private bool disableAfterUse = true;
     [SerializeField] private GameObject focusCamera;
     [SerializeField] private float focusTime;
+    [SerializeField] private GameObject buttonDisplay;
 
     public void Interact()
     {
@@ -23,6 +24,7 @@ public class ButtonDevice : MonoBehaviour, IInteractable
         if(disableAfterUse)
         {
             GetComponent<Collider>().enabled = false;
+            buttonDisplay.SetActive(false);    
             enabled = false;
         }
     }
@@ -31,12 +33,16 @@ public class ButtonDevice : MonoBehaviour, IInteractable
     {
         if(!enabled)
             return;
+
+        buttonDisplay.SetActive(true);
     }
 
     public void OnPlayerExit()
     {
         if(!enabled)
             return;
+
+        buttonDisplay.SetActive(false);
     }
 
     IEnumerator FocusActivable()

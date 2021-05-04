@@ -26,6 +26,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 desiredMovement;
     private Vector3 velocity = Vector3.zero;
     private Vector3 characterOffsetRotation;
+    private AudioSource playerAudio;
 
     public float Gravity { get { return Physics.gravity.y; } set { Physics.gravity = new Vector3(0f, value, 0f); } }
     public Vector3 Velocity { get { return rb.velocity; } set { rb.velocity = value; } }
@@ -38,6 +39,7 @@ public class PlayerMovement : MonoBehaviour
         cameraTransform = Camera.main.transform;
         characterOffsetRotation = characterMesh.rotation.eulerAngles;
         characterAnimator = GetComponent<Animator>();
+        playerAudio = GetComponent<AudioSource>();
     }
 
     private void FixedUpdate()
@@ -85,6 +87,8 @@ public class PlayerMovement : MonoBehaviour
         velocity = rb.velocity;
         velocity.y = Mathf.Sqrt(jumpHeight * -2f * BASE_GRAVITY);
         rb.velocity = velocity;
+        playerAudio.pitch = Random.Range(0.8f, 1.1f);
+        playerAudio.Play();
     }
 
     public void ResetGravity()
